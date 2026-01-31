@@ -3,9 +3,9 @@
 /*
  *
  *	File		:	HANUMAN_32__IMU_BNO055.cpp
- *	Release		:	v0.1
+ *	Release		:	v0.1.1
  *
- *	Created on	:	-----
+ *	Created on	:	Tue 27 Jan 2026
  *		Author	:	hii-nice-2-meet-u
  *
  */
@@ -20,19 +20,19 @@ void IMU_BNO055::__init__(void)
 	I2C_Device.begin();
 
 	WriteRegister(BNO055_REG_ADDRESS__SYS_TRIGGER, 0x20);
-	delay(500);
+	delay(800);
 
 	WriteRegister(BNO055_REG_ADDRESS__OPR_MODE, 0x00);
-	delay(50);
+	delay(100);
 
 	WriteRegister(BNO055_REG_ADDRESS__SYS_TRIGGER, 0x80);
-	delay(250);
+	delay(400);
 
 	WriteRegister(BNO055_REG_ADDRESS__UNIT_SEL, 0x80);
-	delay(50);
+	delay(100);
 
 	WriteRegister(BNO055_REG_ADDRESS__OPR_MODE, 0x0C);
-	delay(50);
+	delay(100);
 }
 
 //"" --------------------------------
@@ -177,63 +177,63 @@ void IMU_BNO055::update(bno055_dataType_t dataType)
 		return;
 
 	case accX:
-		acc.x = ReadRegister16b(BNO055_REG_ADDRESS__ACC_DATA_X_LSB) / 100.0;
+		acc.x = (double)ReadRegister16b(BNO055_REG_ADDRESS__ACC_DATA_X_LSB) / 100.0;
 		return;
 	case accY:
-		acc.y = ReadRegister16b(BNO055_REG_ADDRESS__ACC_DATA_Y_LSB) / 100.0;
+		acc.y = (double)ReadRegister16b(BNO055_REG_ADDRESS__ACC_DATA_Y_LSB) / 100.0;
 		return;
 	case accZ:
-		acc.z = ReadRegister16b(BNO055_REG_ADDRESS__ACC_DATA_Z_LSB) / 100.0;
+		acc.z = (double)ReadRegister16b(BNO055_REG_ADDRESS__ACC_DATA_Z_LSB) / 100.0;
 		return;
 
 	case magX:
-		mag.x = ReadRegister16b(BNO055_REG_ADDRESS__MAG_DATA_X_LSB) / 16.0;
+		mag.x = (double)ReadRegister16b(BNO055_REG_ADDRESS__MAG_DATA_X_LSB) / 16.0;
 		return;
 	case magY:
-		mag.y = ReadRegister16b(BNO055_REG_ADDRESS__MAG_DATA_Y_LSB) / 16.0;
+		mag.y = (double)ReadRegister16b(BNO055_REG_ADDRESS__MAG_DATA_Y_LSB) / 16.0;
 		return;
 	case magZ:
-		mag.z = ReadRegister16b(BNO055_REG_ADDRESS__MAG_DATA_Z_LSB) / 16.0;
+		mag.z = (double)ReadRegister16b(BNO055_REG_ADDRESS__MAG_DATA_Z_LSB) / 16.0;
 		return;
 
 	case gyrX:
-		gyr.x = ReadRegister16b(BNO055_REG_ADDRESS__GYR_DATA_X_LSB) / 16.0;
+		gyr.x = (double)ReadRegister16b(BNO055_REG_ADDRESS__GYR_DATA_X_LSB) / 16.0;
 		return;
 	case gyrY:
-		gyr.y = ReadRegister16b(BNO055_REG_ADDRESS__GYR_DATA_Y_LSB) / 16.0;
+		gyr.y = (double)ReadRegister16b(BNO055_REG_ADDRESS__GYR_DATA_Y_LSB) / 16.0;
 		return;
 	case gyrZ:
-		gyr.z = ReadRegister16b(BNO055_REG_ADDRESS__GYR_DATA_Z_LSB) / 16.0;
+		gyr.z = (double)ReadRegister16b(BNO055_REG_ADDRESS__GYR_DATA_Z_LSB) / 16.0;
 		return;
 
 	case eulX:
-		eul.x = ReadRegister16b(BNO055_REG_ADDRESS__EUL_HEADING_LSB) / 16.0;
+		eul.x = (double)ReadRegister16b(BNO055_REG_ADDRESS__EUL_HEADING_LSB) / 16.0;
 		return;
 	case eulY:
-		eul.y = ReadRegister16b(BNO055_REG_ADDRESS__EUL_ROLL_LSB) / 16.0;
+		eul.y = (double)ReadRegister16b(BNO055_REG_ADDRESS__EUL_ROLL_LSB) / 16.0;
 		return;
 	case eulZ:
-		eul.z = ReadRegister16b(BNO055_REG_ADDRESS__EUL_PITCH_LSB) / 16.0;
+		eul.z = (double)ReadRegister16b(BNO055_REG_ADDRESS__EUL_PITCH_LSB) / 16.0;
 		return;
 
 	case liaX:
-		lia.x = ReadRegister16b(BNO055_REG_ADDRESS__LIA_DATA_X_LSB) / 100.0;
+		lia.x = (double)ReadRegister16b(BNO055_REG_ADDRESS__LIA_DATA_X_LSB) / 100.0;
 		return;
 	case liaY:
-		lia.y = ReadRegister16b(BNO055_REG_ADDRESS__LIA_DATA_Y_LSB) / 100.0;
+		lia.y = (double)ReadRegister16b(BNO055_REG_ADDRESS__LIA_DATA_Y_LSB) / 100.0;
 		return;
 	case liaZ:
-		lia.z = ReadRegister16b(BNO055_REG_ADDRESS__LIA_DATA_Z_LSB) / 100.0;
+		lia.z = (double)ReadRegister16b(BNO055_REG_ADDRESS__LIA_DATA_Z_LSB) / 100.0;
 		return;
 
 	case grvX:
-		grv.x = ReadRegister16b(BNO055_REG_ADDRESS__GRV_DATA_X_LSB) / 100.0;
+		grv.x = (double)ReadRegister16b(BNO055_REG_ADDRESS__GRV_DATA_X_LSB) / 100.0;
 		return;
 	case grvY:
-		grv.y = ReadRegister16b(BNO055_REG_ADDRESS__GRV_DATA_Y_LSB) / 100.0;
+		grv.y = (double)ReadRegister16b(BNO055_REG_ADDRESS__GRV_DATA_Y_LSB) / 100.0;
 		return;
 	case grvZ:
-		grv.z = ReadRegister16b(BNO055_REG_ADDRESS__GRV_DATA_Z_LSB) / 100.0;
+		grv.z = (double)ReadRegister16b(BNO055_REG_ADDRESS__GRV_DATA_Z_LSB) / 100.0;
 		return;
 
 	default:
@@ -243,7 +243,6 @@ void IMU_BNO055::update(bno055_dataType_t dataType)
 
 double IMU_BNO055::read(bno055_dataType_t dataType)
 {
-
 	if (dataType < 7)
 		return 0;
 

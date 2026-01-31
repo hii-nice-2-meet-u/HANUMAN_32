@@ -3,9 +3,9 @@
 /*
  *
  *	File		:	HANUMAN_32.h
- *	Release		:	v0.1
+ *	Release		:	v0.1.1
  *
- *	Created on	:	-----
+ *	Created on	:	Tue 27 Jan 2026
  *		Author	:	hii-nice-2-meet-u
  *
  */
@@ -108,8 +108,8 @@ bool is_swB(void)
 
 //- ================ Knob ================================
 
-#define Knob(void) knob()
-#define KNOB(void) knob()
+#define Knob knob
+#define KNOB knob
 
 int16_t knob(void)
 {

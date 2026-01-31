@@ -3,9 +3,9 @@
 /*
  *
  *	File		:	HANUMAN_32__Encoder.h
- *	Release		:	v0.1
+ *	Release		:	v0.1.1
  *
- *	Created on	:	-----
+ *	Created on	:	Tue 27 Jan 2026
  *		Author	:	hii-nice-2-meet-u
  *
  */
@@ -46,7 +46,7 @@ private:
 		static_cast<EncoderBase*>(arg)->update();
 	}
 
-	void IRAM_ATTR update(void)
+	void update(void)
 	{
 		uint8_t state_A = digitalRead(pin_EncoderA);
 		uint8_t state_B = digitalRead(pin_EncoderB);

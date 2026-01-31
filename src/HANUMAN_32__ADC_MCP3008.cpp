@@ -3,9 +3,9 @@
 /*
  *
  *	File		:	HANUMAN_32__ADC_MCP3008.cpp
- *	Release		:	v0.1
+ *	Release		:	v0.1.1
  *
- *	Created on	:	-----
+ *	Created on	:	Tue 27 Jan 2026
  *		Author	:	hii-nice-2-meet-u
  *
  */

@@ -3,9 +3,9 @@
 /*
  *
  *	File		:	HANUMAN_32___MACRO.h
- *	Release		:	v0.1
+ *	Release		:	v0.1.1
  *
- *	Created on	:	-----
+ *	Created on	:	Tue 27 Jan 2026
  *		Author	:	hii-nice-2-meet-u
  *
  */
@@ -71,7 +71,7 @@
 //* ----------------------------------------------------------------
 
 #define __DEFINE__I2C_FREQ            400000
-#define __DEFINE__I2C_BNO055_ADDRESS  0x29
+#define __DEFINE__I2C_BNO055_ADDRESS  0x28
 #define __DEFINE__I2C_PCA9685_ADDRESS 0x40
 
 //* ----------------------------------------------------------------
