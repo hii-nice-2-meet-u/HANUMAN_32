@@ -1,5 +1,4 @@
 #include <HANUMAN_32.h>
-// #include <h32.h>    // Alternative header, same as HANUMAN_32.h
 
 /*
     ===== Switch Input Functions =====

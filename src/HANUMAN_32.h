@@ -3,12 +3,29 @@
 /*
  *
  *	File		:	HANUMAN_32.h
- *	Release		:	v0.1.1
+ *	Release		:	v0.1.2
  *
  *	Created on	:	Tue 27 Jan 2026
  *		Author	:	hii-nice-2-meet-u
  *
  */
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/*
+|
+|    This product includes Bluepad32, which is licensed under the Apache License, Version 2.0.
+|
+|    Copyright (c) Ricardo Quesada and contributors.
+|
+|    You may obtain a copy of the Apache License, Version 2.0 at:
+|        http://www.apache.org/licenses/LICENSE-2.0
+|
+|    Unless required by applicable law or agreed to in writing, software
+|    distributed under the License is distributed on an "AS IS" BASIS,
+|    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+|    See the License for the specific language governing permissions and
+|    limitations under the License.
+|
+*/
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #ifndef INC_HANUMAN_32_H
@@ -25,7 +42,6 @@
 #include "HANUMAN_32__TFT_ST7735S.h"
 #include "HANUMAN_32__IMU_BNO055.h"
 #include "HANUMAN_32__PWM_PCA9685.h"
-#include "HANUMAN_32__BluePad32.h"
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -613,10 +629,229 @@ void beep(uint16_t duration = 50)
 //\ • Controller
 /// ================================================================================================================================
 
-#ifdef Bluepad32_h
+#ifdef CONFIG_BLUEPAD32_PLATFORM_CUSTOM
 
 //- ================================================================
-//~ #0x0FA
+
+#include <Bluepad32.h>
+
+GamepadPtr myGamepad;
+
+//- ================================================================
+
+void onConnectedGamepad(GamepadPtr gp)
+{
+	myGamepad = gp;
+}
+
+void onDisconnectedGamepad(GamepadPtr gp)
+{
+	myGamepad = nullptr;
+}
+
+void Controller_Connect(void)
+{
+	BP32.setup(&onConnectedGamepad, &onDisconnectedGamepad);
+	BP32.forgetBluetoothKeys();
+	BP32.enableVirtualDevice(false);
+}
+
+bool Controller_Update(void)
+{
+	if (BP32.update())
+	{
+		return (myGamepad && myGamepad->isConnected());
+	}
+	return 0;
+}
+
+//- ================================================================
+
+bool isController_A(void)
+{
+	return myGamepad->a();
+}
+
+bool isController_B(void)
+{
+	return myGamepad->b();
+}
+
+bool isController_X(void)
+{
+	return myGamepad->x();
+}
+
+bool isController_Y(void)
+{
+	return myGamepad->y();
+}
+
+//- ================================================================
+
+bool isController_L1(void)
+{
+	return myGamepad->l1();
+}
+
+bool isController_R1(void)
+{
+	return myGamepad->r1();
+}
+
+bool isController_L2(void)
+{
+	return myGamepad->l2();
+}
+
+bool isController_R2(void)
+{
+	return myGamepad->r2();
+}
+
+//- ================================================================
+
+bool isController_UP(void)
+{
+	return myGamepad->dpad() & DPAD_UP;
+}
+
+bool isController_DOWN(void)
+{
+	return myGamepad->dpad() & DPAD_DOWN;
+}
+
+bool isController_LEFT(void)
+{
+	return myGamepad->dpad() & DPAD_LEFT;
+}
+
+bool isController_RIGHT(void)
+{
+	return myGamepad->dpad() & DPAD_RIGHT;
+}
+
+//- ================================================================
+
+bool isController_Home(void)
+{
+	return myGamepad->miscButtons() & 0x01;
+}
+
+bool isController_Share(void)
+{
+	return myGamepad->miscButtons() & 0x02;
+}
+
+bool isController_Option(void)
+{
+	return myGamepad->miscButtons() & 0x04;
+}
+
+//- ================================================================
+
+bool isController_LeftStick(void)
+{
+	return myGamepad->buttons() & BUTTON_THUMB_L;
+}
+
+bool isController_RightStick(void)
+{
+	return myGamepad->buttons() & BUTTON_THUMB_R;
+}
+
+//- ================================================================
+
+int32_t Controller_getLX(void)
+{
+	return myGamepad->axisX();
+}
+
+int32_t Controller_getLY(void)
+{
+	return myGamepad->axisY();
+}
+
+int32_t Controller_getRX(void)
+{
+	return myGamepad->axisRX();
+}
+
+int32_t Controller_getRY(void)
+{
+	return myGamepad->axisRY();
+}
+
+//- ================================================================
+
+int32_t Controller_getL2(void)
+{
+	return myGamepad->brake();
+}
+
+int32_t Controller_getR2(void)
+{
+	return myGamepad->throttle();
+}
+
+//- ================================================================
+
+uint8_t Controller_getBattery(void)
+{
+	return myGamepad->battery() / 255.00 * 100;
+}
+
+//- ================================================================
+
+void Controller_Rumble(void)
+{
+	return myGamepad->playDualRumble(0, 250, 0x80, 0x80);
+}
+
+void Controller_Rumble(uint16_t duration, uint8_t strong, uint8_t weak)
+{
+	return myGamepad->playDualRumble(0, duration, strong, weak);
+}
+
+//- ================================================================
+
+void Controller_setColor(uint8_t red, uint8_t green, uint8_t blue)
+{
+	myGamepad->setColorLED(red, green, blue);
+}
+
+//- ================================================================
+
+int32_t Controller_gyroX(void)
+{
+	return myGamepad->gyroX();
+}
+
+int32_t Controller_gyroY(void)
+{
+	return myGamepad->gyroY();
+}
+
+int32_t Controller_gyroZ(void)
+{
+	return myGamepad->gyroZ();
+}
+
+int32_t Controller_accelX(void)
+{
+	return myGamepad->accelX();
+}
+
+int32_t Controller_accelY(void)
+{
+	return myGamepad->accelY();
+}
+
+int32_t Controller_accelZ(void)
+{
+	return myGamepad->accelZ();
+}
+
 //- ================================================================
 
 #endif
