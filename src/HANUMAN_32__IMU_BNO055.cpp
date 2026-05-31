@@ -3,9 +3,9 @@
 /*
  *
  *	File		:	HANUMAN_32__IMU_BNO055.cpp
- *	Release		:	v0.1.1
+ *	Release		:	v0.1.3
  *
- *	Created on	:	Tue 27 Jan 2026
+ *	Created on	:	Mon 1 Jun 2026
  *		Author	:	hii-nice-2-meet-u
  *
  */
@@ -19,36 +19,51 @@ void IMU_BNO055::__init__(void)
 {
 	I2C_Device.begin();
 
-	WriteRegister(BNO055_REG_ADDRESS__SYS_TRIGGER, 0x20);
-	delay(800);
+	while (ReadRegister8b(BNO055_REG_ADDRESS__CHIP_ID) != 0xA0)
+	{
+		delay(25);
+	}
 
 	WriteRegister(BNO055_REG_ADDRESS__OPR_MODE, 0x00);
-	delay(100);
+	delay(250);
+
+	WriteRegister(BNO055_REG_ADDRESS__UNIT_SEL, 0x00);
+	delay(250);
 
 	WriteRegister(BNO055_REG_ADDRESS__SYS_TRIGGER, 0x80);
-	delay(400);
-
-	WriteRegister(BNO055_REG_ADDRESS__UNIT_SEL, 0x80);
-	delay(100);
+	delay(800);
 
 	WriteRegister(BNO055_REG_ADDRESS__OPR_MODE, 0x0C);
-	delay(100);
+	delay(2000);
 }
 
 //"" --------------------------------
 
 void IMU_BNO055::getVector(bno055_vector_address_t vector_reg)
 {
+	uint8_t buffer[6];
+
 	privI2C_IMU->beginTransmission(__DEFINE__I2C_BNO055_ADDRESS);
 	privI2C_IMU->write(vector_reg);
 	privI2C_IMU->endTransmission(false);
 	privI2C_IMU->requestFrom(__DEFINE__I2C_BNO055_ADDRESS, 6);
 
-	while (!privI2C_IMU->available())
-		;
-	int16_t _x = privI2C_IMU->read() | (privI2C_IMU->read() << 8);
-	int16_t _y = privI2C_IMU->read() | (privI2C_IMU->read() << 8);
-	int16_t _z = privI2C_IMU->read() | (privI2C_IMU->read() << 8);
+	unsigned long timeout = millis();
+	while (privI2C_IMU->available() < 6)
+	{
+		// Timeout 50ms
+		if (millis() - timeout > 50)
+			return;
+	}
+
+	for (int i = 0; i < 6; i++)
+	{
+		buffer[i] = privI2C_IMU->read();
+	}
+
+	int16_t _x = (int16_t)(buffer[0] | (buffer[1] << 8));
+	int16_t _y = (int16_t)(buffer[2] | (buffer[3] << 8));
+	int16_t _z = (int16_t)(buffer[4] | (buffer[5] << 8));
 
 	switch (vector_reg)
 	{

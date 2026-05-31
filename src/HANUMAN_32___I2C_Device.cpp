@@ -21,7 +21,10 @@ void I2C_Device_Class::begin(void)
 	{
 		privI2C_Shared->begin();
 		privI2C_Shared->setClock(__DEFINE__I2C_FREQ);
+		privI2C_Shared->setTimeout(1000);
+
 		I2C_Device_Class::is_I2C_Begin = true;
+		delay(2000);
 	}
 }
 

@@ -3,9 +3,9 @@
 /*
  *
  *	File		:	HANUMAN_32__IMU_BNO055.h
- *	Release		:	v0.1.1
+ *	Release		:	v0.1.3
  *
- *	Created on	:	Tue 27 Jan 2026
+ *	Created on	:	Mon 1 Jun 2026
  *		Author	:	hii-nice-2-meet-u
  *
  */

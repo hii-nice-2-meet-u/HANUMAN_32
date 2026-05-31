@@ -19,6 +19,7 @@ void EncoderBase::__init__(void)
 {
 	pinMode(this->pin_EncoderA, INPUT);
 	pinMode(this->pin_EncoderB, INPUT);
+	gpio_install_isr_service(0);
 	this->start();
 }
 
