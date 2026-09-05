@@ -3,7 +3,7 @@
 /*
  *
  *	File		:	HANUMAN_32.h
- *	Release		:	v0.1.3
+ *	Release		:	v0.1.4
  *
  *	Created on	:	Tue 27 Jan 2026
  *		Author	:	hii-nice-2-meet-u
@@ -706,6 +706,9 @@ GamepadPtr myGamepad;
 //- ================================================================
 
 //? Chanatip edited
+
+int my_variable[17];
+
 bool setMyVariable(int new_value, int num)
 {
 	if (my_variable[num] != new_value)
@@ -751,22 +754,22 @@ bool Controller_Update(void)
 
 //- ================================================================
 
-bool isController_A(void)
+bool isController_A_Press(void)
 {
 	return myGamepad->a();
 }
 
-bool isController_B(void)
+bool isController_B_Press(void)
 {
 	return myGamepad->b();
 }
 
-bool isController_X(void)
+bool isController_X_Press(void)
 {
 	return myGamepad->x();
 }
 
-bool isController_Y(void)
+bool isController_Y_Press(void)
 {
 	return myGamepad->y();
 }
@@ -793,22 +796,22 @@ bool isController_Y_Click(void)
 
 //- ================================================================
 
-bool isController_L1(void)
+bool isController_L1_Press(void)
 {
 	return myGamepad->l1();
 }
 
-bool isController_R1(void)
+bool isController_R1_Press(void)
 {
 	return myGamepad->r1();
 }
 
-bool isController_L2(void)
+bool isController_L2_Press(void)
 {
 	return myGamepad->l2();
 }
 
-bool isController_R2(void)
+bool isController_R2_Press(void)
 {
 	return myGamepad->r2();
 }

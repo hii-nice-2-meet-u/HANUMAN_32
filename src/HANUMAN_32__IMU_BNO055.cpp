@@ -3,7 +3,7 @@
 /*
  *
  *	File		:	HANUMAN_32__IMU_BNO055.cpp
- *	Release		:	v0.1.3
+ *	Release		:	v0.1.4
  *
  *	Created on	:	Mon 1 Jun 2026
  *		Author	:	hii-nice-2-meet-u
@@ -24,17 +24,37 @@ void IMU_BNO055::__init__(void)
 		delay(25);
 	}
 
+	// WriteRegister(BNO055_REG_ADDRESS__OPR_MODE, 0x00);
+	// delay(250);
+	
+	// WriteRegister(BNO055_REG_ADDRESS__UNIT_SEL, 0x00);
+	// delay(250);
+	
+	// WriteRegister(BNO055_REG_ADDRESS__SYS_TRIGGER, 0x80);
+	// delay(800);
+	
+	// WriteRegister(BNO055_REG_ADDRESS__OPR_MODE, 0x0C);
+	// delay(2000);
+	
+	
+	
+	//////////////////////////////////////////
+	
+	
 	WriteRegister(BNO055_REG_ADDRESS__OPR_MODE, 0x00);
-	delay(250);
+	delay(50);
+	
+	WriteRegister(BNO055_REG_ADDRESS__SYS_TRIGGER, 0x20);
+	delay(300);
+	
+	WriteRegister(BNO055_REG_ADDRESS__PWR_MODE, 0x00);
+	delay(300);
 
-	WriteRegister(BNO055_REG_ADDRESS__UNIT_SEL, 0x00);
-	delay(250);
-
-	WriteRegister(BNO055_REG_ADDRESS__SYS_TRIGGER, 0x80);
-	delay(800);
-
+	WriteRegister(BNO055_REG_ADDRESS__SYS_TRIGGER, 0x00);
+	delay(300);
+	
 	WriteRegister(BNO055_REG_ADDRESS__OPR_MODE, 0x0C);
-	delay(2000);
+	delay(50);
 }
 
 //"" --------------------------------

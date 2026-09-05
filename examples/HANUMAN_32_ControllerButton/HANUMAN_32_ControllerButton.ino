@@ -12,43 +12,43 @@ void loop(void)
 	if (Controller_Update())
 	{
 
-		if (isController_A())
+		if (isController_A_Press())
 			Serial.println("A pressed");
-		if (isController_B())
+		if (isController_B_Press())
 			Serial.println("B pressed");
-		if (isController_X())
+		if (isController_X_Press())
 			Serial.println("X pressed");
-		if (isController_Y())
+		if (isController_Y_Press())
 			Serial.println("Y pressed");
 
-		if (isController_L1())
+		if (isController_L1_Press())
 			Serial.println("L1 pressed");
-		if (isController_R1())
+		if (isController_R1_Press())
 			Serial.println("R1 pressed");
-		if (isController_L2())
+		if (isController_L2_Press())
 			Serial.println("L2 pressed");
-		if (isController_R2())
+		if (isController_R2_Press())
 			Serial.println("R2 pressed");
 
-		if (isController_UP())
-			Serial.println("PAD-UP pressed");
-		if (isController_DOWN())
-			Serial.println("PAD-DOWN pressed");
-		if (isController_LEFT())
-			Serial.println("PAD-LEFT pressed");
-		if (isController_RIGHT())
-			Serial.println("PAD-RIGHT pressed");
+		if (isController_UP_Click())
+			Serial.println("PAD-UP click");
+		if (isController_DOWN_Click())
+			Serial.println("PAD-DOWN click");
+		if (isController_LEFT_Click())
+			Serial.println("PAD-LEFT click");
+		if (isController_RIGHT_Click())
+			Serial.println("PAD-RIGHT click");
 
-		if (isController_Home())
-			Serial.println("Home pressed");
-		if (isController_Share())
-			Serial.println("Share pressed");
-		if (isController_Option())
-			Serial.println("Option pressed");
+		if (isController_Home_Click())
+			Serial.println("Home click");
+		if (isController_Share_Click())
+			Serial.println("Share click");
+		if (isController_Option_Click())
+			Serial.println("Option click");
 
-		if (isController_LeftStick())
-			Serial.println("LeftStick pressed");
-		if (isController_RightStick())
-			Serial.println("RightStick pressed");
+		if (isController_LeftStick_Click())
+			Serial.println("LeftStick click");
+		if (isController_RightStick_Click())
+			Serial.println("RightStick click");
 	}
 }
