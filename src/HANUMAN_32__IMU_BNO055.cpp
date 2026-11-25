@@ -3,7 +3,7 @@
 /*
  *
  *	File		:	HANUMAN_32__IMU_BNO055.cpp
- *	Release		:	v0.1.4
+ *	Release		:	v0.1.6
  *
  *	Created on	:	Mon 1 Jun 2026
  *		Author	:	hii-nice-2-meet-u
@@ -19,10 +19,16 @@ void IMU_BNO055::__init__(void)
 {
 	I2C_Device.begin();
 
+	// Timeout 1000ms (BNO055 boot ~650ms) -> no module = skip, don't hang
+	connected = false;
+	unsigned long timeout = millis();
 	while (ReadRegister8b(BNO055_REG_ADDRESS__CHIP_ID) != 0xA0)
 	{
+		if (millis() - timeout > 1000)
+			return;
 		delay(25);
 	}
+	connected = true;
 
 	// WriteRegister(BNO055_REG_ADDRESS__OPR_MODE, 0x00);
 	// delay(250);
@@ -140,10 +146,9 @@ uint8_t IMU_BNO055::ReadRegister8b(uint8_t reg)
 	privI2C_IMU->beginTransmission(__DEFINE__I2C_BNO055_ADDRESS);
 	privI2C_IMU->write(reg);
 	privI2C_IMU->endTransmission(false);
-	privI2C_IMU->requestFrom(__DEFINE__I2C_BNO055_ADDRESS, 1);
+	if (privI2C_IMU->requestFrom(__DEFINE__I2C_BNO055_ADDRESS, 1) < 1)
+		return 0;
 
-	while (!privI2C_IMU->available())
-		;
 	return privI2C_IMU->read();
 }
 
@@ -152,10 +157,9 @@ uint16_t IMU_BNO055::ReadRegister16b(uint8_t reg)
 	privI2C_IMU->beginTransmission(__DEFINE__I2C_BNO055_ADDRESS);
 	privI2C_IMU->write(reg);
 	privI2C_IMU->endTransmission(false);
-	privI2C_IMU->requestFrom(__DEFINE__I2C_BNO055_ADDRESS, 2);
+	if (privI2C_IMU->requestFrom(__DEFINE__I2C_BNO055_ADDRESS, 2) < 2)
+		return 0;
 
-	while (!privI2C_IMU->available())
-		;
 	return (uint16_t)(privI2C_IMU->read() | (privI2C_IMU->read() << 8));
 }
 
@@ -163,6 +167,9 @@ uint16_t IMU_BNO055::ReadRegister16b(uint8_t reg)
 
 void IMU_BNO055::update(bno055_dataType_t dataType)
 {
+	if (!connected)
+		return;
+
 	if (dataType < 7)
 	{
 		switch (dataType)
@@ -278,6 +285,9 @@ void IMU_BNO055::update(bno055_dataType_t dataType)
 
 double IMU_BNO055::read(bno055_dataType_t dataType)
 {
+	if (!connected)
+		return 0;
+
 	if (dataType < 7)
 		return 0;
 

@@ -3,7 +3,7 @@
 /*
  *
  *	File		:	HANUMAN_32__IMU_BNO055.h
- *	Release		:	v0.1.3
+ *	Release		:	v0.1.6
  *
  *	Created on	:	Mon 1 Jun 2026
  *		Author	:	hii-nice-2-meet-u
@@ -63,6 +63,7 @@ class IMU_BNO055
 
 public:
 	void   __init__(void);
+	bool   connected = false; // false = ไม่พบ BNO055 (ไม่ค้างบูต, read ได้ 0)
 	int8_t temp = 0;
 	Vector acc  = {0, 0, 0};
 	Vector mag  = {0, 0, 0};

@@ -3,7 +3,7 @@
 /*
  *
  *	File		:	HANUMAN_32.h
- *	Release		:	v0.1.4
+ *	Release		:	v0.1.6
  *
  *	Created on	:	Tue 27 Jan 2026
  *		Author	:	hii-nice-2-meet-u
@@ -42,6 +42,7 @@
 #include "HANUMAN_32__TFT_ST7735S.h"
 #include "HANUMAN_32__IMU_BNO055.h"
 #include "HANUMAN_32__PWM_PCA9685.h"
+#include "HANUMAN_32__Logo.h"
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -68,29 +69,49 @@ unsigned long       previousMillis = 0;
 const unsigned long interval       = 1000;
 bool                screenState    = false;
 
+//- ================ Wait Switch (A / B) ================================
+//  เรียกใน setup() → โชว์โลโก้ Artron Academy เต็มจอระหว่างรอ แล้วเคลียร์จอ
+//  เช็กจากชื่อฟังก์ชันที่เรียก (__func__) → เรียกผ่านฟังก์ชันอื่น หรือใน loop() = ไม่โชว์
+
+bool __h32_swState(char id)
+{
+	return (id == 'A') ? sw.getState_Switch_A() : sw.getState_Switch_B();
+}
+
+void __h32_waitSw(char id, bool waitPress, bool waitRelease, const char* caller)
+{
+	bool logo = (strcmp(caller, "setup") == 0) && (waitPress ? !__h32_swState(id) : __h32_swState(id));
+	if (logo)
+		tft.draw_BitmapColor(0, 0, Artron_Academy_logo, 160, 128);
+
+	if (waitPress)
+	{
+		while (!__h32_swState(id))
+			;
+		if (logo)
+		{
+			tft.clear();
+			logo = false;
+		}
+		delay(25);
+	}
+
+	if (waitRelease)
+	{
+		while (__h32_swState(id))
+			;
+		if (logo)
+			tft.clear();
+		delay(100);
+	}
+}
+
 //- ================ Switch - A ================================
 
-#define wait_swA(void) swA()
-
-void swA_Press(void)
-{
-	while (!sw.getState_Switch_A())
-		;
-	delay(25);
-}
-
-void swA_unPress(void)
-{
-	while (sw.getState_Switch_A())
-		;
-	delay(100);
-}
-
-void swA(void)
-{
-	swA_Press();
-	swA_unPress();
-}
+#define swA_Press(...)   __h32_waitSw('A', true, false, __func__)
+#define swA_unPress(...) __h32_waitSw('A', false, true, __func__)
+#define swA(...)         __h32_waitSw('A', true, true, __func__)
+#define wait_swA(...)    __h32_waitSw('A', true, true, __func__)
 
 bool is_swA(void)
 {
@@ -130,27 +151,10 @@ void swA_bitmap(void)
 
 //- ================ Switch - B ================================
 
-#define wait_swB(void) swB()
-
-void swB_Press(void)
-{
-	while (!sw.getState_Switch_B())
-		;
-	delay(25);
-}
-
-void swB_unPress(void)
-{
-	while (sw.getState_Switch_B())
-		;
-	delay(100);
-}
-
-void swB(void)
-{
-	swB_Press();
-	swB_unPress();
-}
+#define swB_Press(...)   __h32_waitSw('B', true, false, __func__)
+#define swB_unPress(...) __h32_waitSw('B', false, true, __func__)
+#define swB(...)         __h32_waitSw('B', true, true, __func__)
+#define wait_swB(...)    __h32_waitSw('B', true, true, __func__)
 
 bool is_swB(void)
 {
@@ -218,6 +222,24 @@ int16_t knob(int16_t minValue, int16_t maxValue)
 
 #define Analog(channel) analog(channel)
 
+//  IO1 (GPIO14) / IO2 (GPIO15) - ตั้ง pinMode ให้อัตโนมัติตามคำสั่งที่เรียก (core 3.x ไม่ยอม digitalWrite ถ้าไม่ตั้ง)
+//  0 = ยังไม่ตั้ง/ถูก analogRead ใช้, 1 = INPUT, 2 = OUTPUT
+uint8_t __h32_ioMode[2] = {0, 0};
+
+uint8_t __h32_ioPin(uint8_t channel, uint8_t mode)
+{
+	uint8_t pin = (channel == 8) ? 14 : 15;
+	if (__h32_ioMode[channel - 8] != mode)
+	{
+		if (mode == 1)
+			pinMode(pin, INPUT);
+		else if (mode == 2)
+			pinMode(pin, OUTPUT);
+		__h32_ioMode[channel - 8] = mode;
+	}
+	return pin;
+}
+
 uint16_t analog(uint8_t channel)
 {
 	if (channel > 7)
@@ -225,10 +247,10 @@ uint16_t analog(uint8_t channel)
 		switch (channel)
 		{
 		case 8:
-			return analogRead(14);
+			return analogRead(__h32_ioPin(8, 0));
 
 		case 9:
-			return analogRead(0);
+			return analogRead(__h32_ioPin(9, 0));
 
 		default:
 			return 0;
@@ -237,14 +259,17 @@ uint16_t analog(uint8_t channel)
 	return adc.ReadValue(channel);
 }
 
+// A1-A8 (MCP3008) = 0-1023, IO1/IO2 (ESP32 ADC) = 0-4095
 uint16_t analog(uint8_t channel, uint16_t maxValue)
 {
-	return (analog(channel) * maxValue) / 1023;
+	uint32_t full = (channel > 7) ? 4095 : 1023;
+	return ((uint32_t)analog(channel) * maxValue) / full;
 }
 
 uint16_t analog(uint8_t channel, uint16_t minValue, uint16_t maxValue)
 {
-	return (analog(channel) * (maxValue - minValue)) / 1023 + minValue;
+	uint32_t full = (channel > 7) ? 4095 : 1023;
+	return ((int32_t)analog(channel) * ((int32_t)maxValue - minValue)) / (int32_t)full + minValue;
 }
 
 //- ================ Digital Read ================================
@@ -260,10 +285,10 @@ uint8_t digital(uint8_t channel)
 		{
 
 		case 8:
-			return digitalRead(14);
+			return digitalRead(__h32_ioPin(8, 1));
 
 		case 9:
-			return digitalRead(15);
+			return digitalRead(__h32_ioPin(9, 1));
 
 		default:
 			return 0;
@@ -656,11 +681,11 @@ void digital(uint8_t channel, uint8_t value)
 	{
 
 	case 8:
-		digitalWrite(14, value);
+		digitalWrite(__h32_ioPin(8, 2), value);
 		break;
 
 	case 9:
-		digitalWrite(15, value);
+		digitalWrite(__h32_ioPin(9, 2), value);
 		break;
 
 	default:
@@ -679,8 +704,8 @@ void digital(uint8_t channel, uint8_t value)
 
 //- ================ Buzzer ================================
 
-#define Beep(void) beep
-#define BEEP(void) beep
+#define Beep beep
+#define BEEP beep
 
 void beep(uint16_t duration = 50)
 {
@@ -1034,7 +1059,7 @@ int32_t Controller_accelZ(void)
 
 void __initialize_Hanuman32(void)
 {
-	delay(500);
+	delay(100); // v0.1.6: เดิม 500 ms
 	imu.__init__();
 	pwm.__init__();
 	enc.__init__();

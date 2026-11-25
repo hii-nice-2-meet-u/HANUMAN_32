@@ -3,7 +3,7 @@
 /*
  *
  *	File		:	HANUMAN_32___I2C_Device.cpp
- *	Release		:	v0.1.1
+ *	Release		:	v0.1.6
  *
  *	Created on	:	Tue 27 Jan 2026
  *		Author	:	hii-nice-2-meet-u
@@ -24,7 +24,7 @@ void I2C_Device_Class::begin(void)
 		privI2C_Shared->setTimeout(1000);
 
 		I2C_Device_Class::is_I2C_Begin = true;
-		delay(2000);
+		delay(50); // v0.1.6: เดิม 2000 ms — BNO055 รอบูตเองใน imu.__init__ (timeout 1 s)
 	}
 }
 
